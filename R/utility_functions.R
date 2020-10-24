@@ -6,7 +6,7 @@
 #' @param xlab_tag string or expression for the x label. Default is Time (sec).
 #' @param ylab_tag string or expression for the y label. Default is c/c0.
 #' @param file_name string. The name for the pdf file to save the figure. Default is NULL.
-#' @param save_pdf logical. Default is FALSE.
+#' @param save_pdf logical. Should de figure be saved to a pdf file. Default is FALSE.
 #'
 #' @return ggplot object
 #' @export

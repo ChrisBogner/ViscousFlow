@@ -25,7 +25,7 @@ The fist column should contain the time and the second the tracer concentration.
 
 \item{file_name}{string. The name for the pdf file to save the figure. Default is NULL.}
 
-\item{save_pdf}{logical. Default is FALSE.}
+\item{save_pdf}{logical. Should de figure be saved to a pdf file. Default is FALSE.}
 }
 \value{
 ggplot object
