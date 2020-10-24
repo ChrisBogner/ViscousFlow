@@ -1,7 +1,10 @@
 #' Calculate the breakthrough time of a tracer
 #'
+#' The breakthrough time of a tracer in the drainage of a soil column is calculated as the maximum of curvature of its concentration in a suitable time interval.
+#'
+#'
 #' @param tracer_data tibble or data.frame. Tracer breakthrough data.
-#' @param time_interval vector of length 2. The time interval to search for the breakthrough.
+#' @param time_interval vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.
 #' @param xlab_tag string or expression for the x label. Default is Time (sec).
 #' @param ylab_tag string or expression for the y label. Default is c/c0.
 #' @param do_plot logical. Should a plot be produced. Default is TRUE.

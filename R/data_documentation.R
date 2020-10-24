@@ -14,3 +14,21 @@
 #' @format A data frame with 213 rows and 2 variables
 
 NULL
+
+
+#' Drainage
+#'
+#' A dataset containing the drainage from a soil column in an irrigation experiment. The variables are the following:
+#'
+#' \itemize{
+#'   \item time. Time since the start of irrigation in seconds
+#'   \item value. The flux in mm/h
+#' }
+#'
+#' @docType data
+#' @keywords datasets
+#' @name drainage
+#' @usage data(drainage)
+#' @format A data frame with 2184 rows and 2 variables
+
+NULL

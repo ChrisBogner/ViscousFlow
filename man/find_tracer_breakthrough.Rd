@@ -15,7 +15,7 @@ find_tracer_breakthrough(
 \arguments{
 \item{tracer_data}{tibble or data.frame. Tracer breakthrough data.}
 
-\item{time_interval}{vector of length 2. The time interval to search for the breakthrough.}
+\item{time_interval}{vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.}
 
 \item{xlab_tag}{string or expression for the x label. Default is Time (sec).}
 
@@ -27,7 +27,7 @@ find_tracer_breakthrough(
 numeric. The estimated time of the tracer breakthrough.
 }
 \description{
-Calculate the breakthrough time of a tracer
+The breakthrough time of a tracer in the drainage of a soil column is calculated as the maximum of curvature of its concentration in a suitable time interval.
 }
 \examples{
 data(tracer)

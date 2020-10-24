@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
+^ViscousFlow\bits_and_pieces.R
