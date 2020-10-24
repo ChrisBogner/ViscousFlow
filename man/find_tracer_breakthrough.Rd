@@ -13,9 +13,9 @@ find_tracer_breakthrough(
 )
 }
 \arguments{
-\item{tracer_data}{tibble or data.frame. Tracer breakthrough data.}
+\item{tracer_data}{tibble or data.frame. Tracer breakthrough data. The first column must be time, the second the tracer concentration.}
 
-\item{time_interval}{vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.}
+\item{time_interval}{numeric vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.}
 
 \item{xlab_tag}{string or expression for the x label. Default is Time (sec).}
 

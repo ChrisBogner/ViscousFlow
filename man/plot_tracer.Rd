@@ -14,8 +14,7 @@ plot_tracer(
 )
 }
 \arguments{
-\item{tracer_data}{tibble or data.frame. Tracer breakthrough data.
-The fist column should contain the time and the second the tracer concentration.}
+\item{tracer_data}{tibble or data.frame. Tracer breakthrough data. The first column must be time, the second the tracer concentration.}
 
 \item{time_threshold}{numeric. Time of the breakthrough (i.e. start of the concentration increase)}
 

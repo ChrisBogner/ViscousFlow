@@ -3,8 +3,8 @@
 #' The breakthrough time of a tracer in the drainage of a soil column is calculated as the maximum of curvature of its concentration in a suitable time interval.
 #'
 #'
-#' @param tracer_data tibble or data.frame. Tracer breakthrough data.
-#' @param time_interval vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.
+#' @param tracer_data tibble or data.frame. Tracer breakthrough data. The first column must be time, the second the tracer concentration.
+#' @param time_interval numeric vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.
 #' @param xlab_tag string or expression for the x label. Default is Time (sec).
 #' @param ylab_tag string or expression for the y label. Default is c/c0.
 #' @param do_plot logical. Should a plot be produced. Default is TRUE.
@@ -72,4 +72,25 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
 
     breakthrough_time
   } else breakthrough_time
+}
+
+
+#' Calculate stationary flow rate in drainage
+#'
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. First column must be time, second the drainage data.
+#' @param time_interval numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
+#'
+#' @return numeric. The stationary flow rate
+#' @export
+#'
+#' @examples
+#' data(drainage)
+#' fit_stationary_flow_rate(drainage_data = drainage, time_interval = c(0.9 * 64404 , 64404))
+fit_stationary_flow_rate <- function(drainage_data, time_interval) {
+  ind1 <- max(which(drainage_data[,1] <= time_interval[2]))
+  ind2 <- min(which(drainage_data[,1] >= time_interval[1]))
+
+  drainage_data[ind1:ind2, ] %>%
+    dplyr::pull(var = 2) %>%
+    mean(na.rm = T)
 }

@@ -1,7 +1,6 @@
 #' Plot the tracer breakthrough curve
 #'
-#' @param tracer_data tibble or data.frame. Tracer breakthrough data.
-#' The fist column should contain the time and the second the tracer concentration.
+#' @param tracer_data tibble or data.frame. Tracer breakthrough data. The first column must be time, the second the tracer concentration.
 #' @param time_threshold numeric. Time of the breakthrough (i.e. start of the concentration increase)
 #' @param xlab_tag string or expression for the x label. Default is Time (sec).
 #' @param ylab_tag string or expression for the y label. Default is c/c0.

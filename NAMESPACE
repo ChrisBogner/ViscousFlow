@@ -2,5 +2,6 @@
 
 export("%>%")
 export(find_tracer_breakthrough)
+export(fit_stationary_flow_rate)
 export(plot_tracer)
 importFrom(magrittr,"%>%")
