@@ -77,7 +77,7 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
 
 #' Calculate stationary flow rate in drainage
 #'
-#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. First column must be time, second the drainage data.
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.
 #' @param time_interval numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
 #'
 #' @return numeric. The stationary flow rate
@@ -93,4 +93,43 @@ fit_stationary_flow_rate <- function(drainage_data, time_interval) {
   drainage_data[ind1:ind2, ] %>%
     dplyr::pull(var = 2) %>%
     mean(na.rm = T)
+}
+
+#' Calculate the theoretical drainage according to the viscous flow approach
+#'
+#' @description According to the viscous flow approach, the theoretical drainage can be calculated as follows:
+#'
+#' \loadmathjax
+#' \mjdeqn{q(Z,t) = 0 \quad \mathrm{if} \quad T_{B} \leq t \leq T_{W}}{}
+#'
+#' \mjdeqn{q(Z,t) = q_{s} \quad \mathrm{if} \quad T_{W} \leq t \leq T_{D}}{}
+#'
+#' \mjdeqn{q(Z,t) = q_{s} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty}{}
+#'
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.
+#' @param qS numeric. The volume flux density applied to the soil column (i.e. the irrigation rate or the stationary flow rate).
+#' @param TW numeric. Arrival time of the wetting front.
+#' @param TD numeric. Arrival time of the drainage front
+#' @param TE numeric. Time of the end of the irrigation.
+#' @param exponent numeric. The exponent in the viscous flow calculation. Default is 2/3.
+#'
+#' @return tibble. The original drainage data with a new column "viscous_flow" with the calculated viscous flow.
+#' @export
+#'
+#' @examples
+#' data(drainage)
+#' flow <- calculate_viscous_flow(drainage_data = drainage, qS = 10.1, TE = 64404,
+#' TD = 64404 +100, TW = 1000)
+calculate_viscous_flow <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
+  flow_time <- dplyr::pull(drainage_data, var = 1)
+
+  flow <- drainage_data %>%
+    dplyr::mutate(
+      viscous_flow = dplyr::case_when(
+        flow_time < TW ~ 0,
+        flow_time < TD & flow_time >= TW ~ qS,
+        TRUE ~ qS * ((TD - TE)/(flow_time - TE))^exponent
+      )
+    )
+  flow
 }

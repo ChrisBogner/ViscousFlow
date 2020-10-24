@@ -7,7 +7,7 @@
 fit_stationary_flow_rate(drainage_data, time_interval)
 }
 \arguments{
-\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. First column must be time, second the drainage data.}
+\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.}
 
 \item{time_interval}{numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.}
 }
