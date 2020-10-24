@@ -23,3 +23,5 @@ Depends:
     R (>= 2.10)
 Suggests: 
     testthat
+URL: https://github.com/ChrisBogner/ViscousFlow
+BugReports: https://github.com/ChrisBogner/ViscousFlow/issues
