@@ -7,6 +7,8 @@
 plot_tracer(
   tracer_data,
   time_threshold = NULL,
+  xlab_tag = "Time (sec)",
+  ylab_tag = expression(c/c[0]),
   file_name = NULL,
   save_pdf = FALSE
 )
@@ -17,9 +19,13 @@ The fist column should contain the time and the second the tracer concentration.
 
 \item{time_threshold}{numeric. Time of the breakthrough (i.e. start of the concentration increase)}
 
-\item{file_name}{string. The name for the pdf file to save the figure. Default is NULL}
+\item{xlab_tag}{string or expression for the x label. Default is Time (sec).}
 
-\item{save_pdf}{logical. Default is FALSE}
+\item{ylab_tag}{string or expression for the y label. Default is c/c0.}
+
+\item{file_name}{string. The name for the pdf file to save the figure. Default is NULL.}
+
+\item{save_pdf}{logical. Default is FALSE.}
 }
 \value{
 ggplot object
@@ -28,5 +34,6 @@ ggplot object
 Plot the tracer breakthrough curve
 }
 \examples{
+data(tracer)
 plot_tracer(tracer_data = tracer, time_threshold = 40000)
 }
