@@ -7,9 +7,9 @@
 calculate_viscous_flow(drainage_data, qS, TW, TD, TE, exponent = 3/2)
 }
 \arguments{
-\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.}
+\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.}
 
-\item{qS}{numeric. The volume flux density applied to the soil column (i.e. the irrigation rate or the stationary flow rate).}
+\item{qS}{numeric. The volume flux density applied to the top of the soil column (i.e. the irrigation rate or the stationary flow rate, which should be equal at steady state).}
 
 \item{TW}{numeric. Arrival time of the wetting front.}
 
@@ -23,7 +23,7 @@ calculate_viscous_flow(drainage_data, qS, TW, TD, TE, exponent = 3/2)
 tibble. The original drainage data with a new column "viscous_flow" with the calculated viscous flow.
 }
 \description{
-According to the viscous flow approach, the theoretical drainage can be calculated as follows:
+According to the viscous flow approach (e.g. Germann, 2018), the theoretical drainage can be calculated as follows:
 
 \loadmathjax
 \mjdeqn{q(Z,t) = 0 \quad \mathrm{if} \quad T_{B} \leq t \leq T_{W}}{}
@@ -31,9 +31,16 @@ According to the viscous flow approach, the theoretical drainage can be calculat
 \mjdeqn{q(Z,t) = q_{s} \quad \mathrm{if} \quad T_{W} \leq t \leq T_{D}}{}
 
 \mjdeqn{q(Z,t) = q_{s} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty}{}
+
+where \mjeqn{q(Z,t)}{} is the drainage flow in a depth \mjeqn{Z}{} and time \mjeqn{t}{}, \mjeqn{q_{s}}{} is the flux density applied at the top of the soil column
+(i.e. irrigation intensity), \mjeqn{T_{B}, T_{E}, T_{W}, T_{D}}{} are the beginning and the end of irrigation, and the arrival times of the wetting and drainage fronts, respectively.
 }
 \examples{
 data(drainage)
 flow <- calculate_viscous_flow(drainage_data = drainage, qS = 10.1, TE = 64404,
 TD = 64404 +100, TW = 1000)
+}
+\references{
+\insertRef{Germann2018}{ViscousFlow}
+\insertRef{Bogner2019}{ViscousFlow}
 }

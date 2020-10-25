@@ -2,22 +2,22 @@
 % Please edit documentation in R/fit_models.R
 \name{fit_stationary_flow_rate}
 \alias{fit_stationary_flow_rate}
-\title{Calculate stationary flow rate in drainage}
+\title{Calculate stationary flow rate in the drainage}
 \usage{
-fit_stationary_flow_rate(drainage_data, time_interval)
+fit_stationary_flow_rate(drainage_data, stationary_time)
 }
 \arguments{
-\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.}
+\item{drainage_data}{tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.}
 
-\item{time_interval}{numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.}
+\item{stationary_time}{numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.}
 }
 \value{
 numeric. The stationary flow rate
 }
 \description{
-Calculate stationary flow rate in drainage
+Calculate stationary flow rate in the drainage
 }
 \examples{
 data(drainage)
-fit_stationary_flow_rate(drainage_data = drainage, time_interval = c(0.9 * 64404 , 64404))
+fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404))
 }

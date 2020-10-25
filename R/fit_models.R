@@ -75,20 +75,20 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
 }
 
 
-#' Calculate stationary flow rate in drainage
+#' Calculate stationary flow rate in the drainage
 #'
-#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.
-#' @param time_interval numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.
+#' @param stationary_time numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
 #'
 #' @return numeric. The stationary flow rate
 #' @export
 #'
 #' @examples
 #' data(drainage)
-#' fit_stationary_flow_rate(drainage_data = drainage, time_interval = c(0.9 * 64404 , 64404))
-fit_stationary_flow_rate <- function(drainage_data, time_interval) {
-  ind1 <- max(which(drainage_data[,1] <= time_interval[2]))
-  ind2 <- min(which(drainage_data[,1] >= time_interval[1]))
+#' fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404))
+fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
+  ind1 <- max(which(drainage_data[,1] <= stationary_time[2]))
+  ind2 <- min(which(drainage_data[,1] >= stationary_time[1]))
 
   drainage_data[ind1:ind2, ] %>%
     dplyr::pull(var = 2) %>%
@@ -97,7 +97,7 @@ fit_stationary_flow_rate <- function(drainage_data, time_interval) {
 
 #' Calculate the theoretical drainage according to the viscous flow approach
 #'
-#' @description According to the viscous flow approach, the theoretical drainage can be calculated as follows:
+#' @description According to the viscous flow approach (e.g. Germann, 2018), the theoretical drainage can be calculated as follows:
 #'
 #' \loadmathjax
 #' \mjdeqn{q(Z,t) = 0 \quad \mathrm{if} \quad T_{B} \leq t \leq T_{W}}{}
@@ -106,8 +106,11 @@ fit_stationary_flow_rate <- function(drainage_data, time_interval) {
 #'
 #' \mjdeqn{q(Z,t) = q_{s} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty}{}
 #'
-#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must be time, second the drainage data.
-#' @param qS numeric. The volume flux density applied to the soil column (i.e. the irrigation rate or the stationary flow rate).
+#' where \mjeqn{q(Z,t)}{} is the drainage flow in a depth \mjeqn{Z}{} and time \mjeqn{t}{}, \mjeqn{q_{s}}{} is the flux density applied at the top of the soil column
+#' (i.e. irrigation intensity), \mjeqn{T_{B}, T_{E}, T_{W}, T_{D}}{} are the beginning and the end of irrigation, and the arrival times of the wetting and drainage fronts, respectively.
+#'
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.
+#' @param qS numeric. The volume flux density applied to the top of the soil column (i.e. the irrigation rate or the stationary flow rate, which should be equal at steady state).
 #' @param TW numeric. Arrival time of the wetting front.
 #' @param TD numeric. Arrival time of the drainage front
 #' @param TE numeric. Time of the end of the irrigation.
@@ -115,6 +118,11 @@ fit_stationary_flow_rate <- function(drainage_data, time_interval) {
 #'
 #' @return tibble. The original drainage data with a new column "viscous_flow" with the calculated viscous flow.
 #' @export
+#'
+#' @importFrom Rdpack reprompt
+#'
+#' @references \insertRef{Germann2018}{ViscousFlow}
+#' \insertRef{Bogner2019}{ViscousFlow}
 #'
 #' @examples
 #' data(drainage)
@@ -132,4 +140,142 @@ calculate_viscous_flow <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2
       )
     )
   flow
+}
+
+#' Calculate the flux density at the top of the soil column
+#'
+#' Converts the pump rate of the irrigation pump into the flux density \mjeqn{q_S}{} in m/s.
+#'
+#' @param pump_rate numeric. The pump rate in g/min
+#' @param D numeric. Diameter of the soil column.
+#'
+#' @return numeric. The flux density \mjeqn{q_S}{} in m/s
+#' @export
+calculate_qs <- function(pump_rate, D = 0.08) {
+  # pump_rate in g/min, qs in m/h
+  pump_rate/((D/2 * 100)^2 * pi * 100 * 60)
+}
+
+
+#' Calculate viscous flow at the end of the drainage for plotting
+#'
+#' This is an internal function. To calculate the viscous flow use calculate_viscous_flow.
+#'
+#' @param TD numeric. Arrival time of the drainage front
+#' @param qS numeric. Either the flux density at the top of the column or the fitted stationary flow.
+#' @param TE numeric. End of irrigation
+#' @param time_vector numeric vector. The time vector to calculate the viscous flow.
+#' @param exponent numeric. The exponent in the equation of viscous flow. Default is 2/3.
+#'
+#' @return numeric vector. Viscous flow.
+#' @export
+#' @NoRd
+calc_visc_flow_internal = function(TD, qS, TE, time_vector, exponent = 3/2) {
+  res <- sapply(time_vector, function(x) {
+    ifelse(x < TD, qS, qS * ((TD - TE)/(x - TE))^exponent)
+  })
+  res
+}
+
+
+#' Calculate the arrival time of the wetting front
+#'
+#' @param TD numeric. Arrival time of the drainage front.
+#' @param TE numeric. End of irrigation.
+#' @param TB numeric. Beginning of irrigation, usually \mjeqn{T_B = 0}{}.
+#'
+#' @return numeric. Arrival time of the wetting front.
+#' @export
+calculate_TW = function(TD, TE, TB = 0){
+  # check T_D with T_W = T_B + 3*(T_D - T_E)
+  TB + 3*(TD - TE)
+}
+
+
+#' Fit the viscous flow equation
+#'
+#' Fits the viscous flow equation to the drainage curve of an irrigation experiment on a soil column,
+#' calculates the arrival time of the drainage front \mjeqn{T_D}{TD}.
+#'
+#' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.
+#' @param stationary_time numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
+#' @param D numeric. Diameter of the soil column in m.
+#' @param TE numeric. End of irrigation
+#' @param TD_interval numeric vector of length 2. The time interval where the arrival time of the drainage front \mjeqn{T_D}{TD} is expected (initial guess for the optimization routine). Default is NULL and is internally replaced by TD_interval = c(0.9 * TE, 1.1 * TE)
+#' @param qS numeric. Stationary flow rate in m/s. Default is NULL and fit_qS = TRUE to fit \mjeqn{q_S}{qS}, cf. fit_stationary_flow_rate.
+#' @param fit_qS logical. Should \mjeqn{q_S}{qS} be optimized. Default is TRUE.
+#' @param delta_t numeric. The time interval in the drainage_data.
+#' @param my_weights numeric or NULL. Weights for the optimization routine. Experimental, at the moment set to 1.
+#'
+#' @return list.
+#' q_ms: drainage in m/s
+#' ind: time from which on the fit was done
+#' TD: arrival time of the drainage front
+#' TW: arrival time of the wetting front
+#' TE: end of irrigation (unchanged)
+#' viscous_flow_tail: theoretical drainage according to the viscous flow used for the optimization
+#' @export
+#'
+#' @examples
+#' data(drainage)
+#' my_TD <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404),
+#' TE = 64404, TD_interval = c(0.9 * TE, 1.1 * TE),
+#' qS = NULL, fit_qS = TRUE, delta_t = 30,
+#' my_weights = NULL)
+fit_drainage_tail <- function(drainage_data, stationary_time, D = 0.08,
+                              TE, TD_interval = NULL,
+                              qS = NULL, fit_qS = TRUE, delta_t = 30,
+                              my_weights = 1) {
+
+  TD_interval = c(0.9 * TE, 1.1 * TE)
+  # transform q1 from mm/h to m/s
+  q_ms <- drainage_data %>%
+    dplyr::pull(var = 2)/(1000*3600)
+  flow_time <- drainage_data %>%
+    dplyr::pull(var = 1)
+
+  # fit flow rate during stationary flow
+  if(fit_qS)  qS <- fit_stationary_flow_rate(drainage_data = drainage_data, stationary_time)/(1000*3600)
+  else qS <- qS
+
+  # optimize the arrival time of the drainage front
+  # exclude all time points until lower time limit in TD_interval
+  ind = min(which(flow_time > TD_interval[1]))
+
+  fit_TD = function(theta, weights) {
+    sum((weights * (calc_visc_flow_internal(TD = theta, qS = qS, TE = TE, time_vector = flow_time[-c(1:ind)]) - q_ms[-c(1:ind)]))^2)
+  }
+
+  if(is.null(my_weights)) {
+    weight_1 = max(which(flow_time[-c(1:ind)] <= TE))
+    my_weights = c(rep(0.5, weight_1), rep(1.5, (length(flow_time[-c(1:ind)]) - weight_1)))
+  }
+  TD_optim = stats::optimize(fit_TD, interval = TD_interval, weights = my_weights, tol = 0.0001)$minimum
+
+  viscous_flow_tail <- calc_visc_flow_internal(TD = TD_optim, qS = qS, TE = TE, flow_time[-c(1:ind)])
+
+
+  TD = ceiling(TD_optim / delta_t) * delta_t
+
+  TW = calculate_TW(TD = TD, TE = TE)
+
+  # Plot the results
+  flow <- data.frame('flow_time' = flow_time[-c(1:ind)], 'flow_experiment' = q_ms[-c(1:ind)],
+                 'viscous_flow_tail' = viscous_flow_tail)
+  g <- ggplot2::ggplot(data = flow, ggplot2::aes(x = flow_time, y = flow_experiment)) +
+    ggplot2::geom_line() +
+    ggplot2::geom_line(ggplot2::aes(y = viscous_flow_tail), colour = 'orange') +
+    ggplot2::xlab('Time') +
+    ggplot2::ylab('Flux (m/s)') +
+    ggplot2::geom_vline(xintercept = TD, lty = 2, col = 'blue')
+
+  # plot(time(q1)[-c(1:ind)], q.exp[-c(1:ind)],
+  #      ylim = c(0.95*qS.column, 1.15*qS.column),
+  #      xlim = c(time(q1)[ind], time(q1)[ind + 150]),
+  #      col = 'red', type = 'l', xlab = 'Time (s)', ylab = 'Flux (m/s)')
+  # lines(time(q1)[-c(1:ind)], qm, lwd = 1.5)
+  # abline(v = c(tD.optim, ind.upper.all[1]), lty = 2)
+
+  print(g)
+  list(q_ms = q_ms, ind = ind, TD = TD, TW = TW, TE = TE, viscous_flow_tail = viscous_flow_tail)
 }
