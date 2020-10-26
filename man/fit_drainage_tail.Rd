@@ -7,7 +7,7 @@
 fit_drainage_tail(
   drainage_data,
   stationary_time,
-  D = 0.08,
+  D,
   TE,
   TD_interval = NULL,
   qS = NULL,
@@ -39,6 +39,7 @@ fit_drainage_tail(
 list.
 q_ms: drainage in m/s
 ind: time from which on the fit was done
+qS: stationary flow rate in m/s
 TD: arrival time of the drainage front
 TW: arrival time of the wetting front
 TE: end of irrigation (unchanged)

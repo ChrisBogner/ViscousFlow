@@ -126,9 +126,9 @@ fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
 #'
 #' @examples
 #' data(drainage)
-#' flow <- calculate_viscous_flow(drainage_data = drainage, qS = 10.1, TE = 64404,
+#' flow <- calculate_vf(drainage_data = drainage, qS = 10.1, TE = 64404,
 #' TD = 64404 +100, TW = 1000)
-calculate_viscous_flow <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
+calculate_vf <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
   flow_time <- dplyr::pull(drainage_data, var = 1)
 
   flow <- drainage_data %>%
@@ -170,7 +170,7 @@ calculate_qs <- function(pump_rate, D = 0.08) {
 #' @return numeric vector. Viscous flow.
 #' @export
 #' @NoRd
-calc_visc_flow_internal = function(TD, qS, TE, time_vector, exponent = 3/2) {
+calc_vf_internal = function(TD, qS, TE, time_vector, exponent = 3/2) {
   res <- sapply(time_vector, function(x) {
     ifelse(x < TD, qS, qS * ((TD - TE)/(x - TE))^exponent)
   })
@@ -210,6 +210,7 @@ calculate_TW = function(TD, TE, TB = 0){
 #' @return list.
 #' q_ms: drainage in m/s
 #' ind: time from which on the fit was done
+#' qS: stationary flow rate in m/s
 #' TD: arrival time of the drainage front
 #' TW: arrival time of the wetting front
 #' TE: end of irrigation (unchanged)
@@ -222,7 +223,7 @@ calculate_TW = function(TD, TE, TB = 0){
 #' TE = 64404, TD_interval = c(0.9 * TE, 1.1 * TE),
 #' qS = NULL, fit_qS = TRUE, delta_t = 30,
 #' my_weights = NULL)
-fit_drainage_tail <- function(drainage_data, stationary_time, D = 0.08,
+fit_drainage_tail <- function(drainage_data, stationary_time, D,
                               TE, TD_interval = NULL,
                               qS = NULL, fit_qS = TRUE, delta_t = 30,
                               my_weights = 1) {
@@ -243,7 +244,7 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D = 0.08,
   ind = min(which(flow_time > TD_interval[1]))
 
   fit_TD = function(theta, weights) {
-    sum((weights * (calc_visc_flow_internal(TD = theta, qS = qS, TE = TE, time_vector = flow_time[-c(1:ind)]) - q_ms[-c(1:ind)]))^2)
+    sum((weights * (calc_vf_internal(TD = theta, qS = qS, TE = TE, time_vector = flow_time[-c(1:ind)]) - q_ms[-c(1:ind)]))^2)
   }
 
   if(is.null(my_weights)) {
@@ -252,7 +253,7 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D = 0.08,
   }
   TD_optim = stats::optimize(fit_TD, interval = TD_interval, weights = my_weights, tol = 0.0001)$minimum
 
-  viscous_flow_tail <- calc_visc_flow_internal(TD = TD_optim, qS = qS, TE = TE, flow_time[-c(1:ind)])
+  viscous_flow_tail <- calc_vf_internal(TD = TD_optim, qS = qS, TE = TE, flow_time[-c(1:ind)])
 
 
   TD = ceiling(TD_optim / delta_t) * delta_t
@@ -269,13 +270,14 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D = 0.08,
     ggplot2::ylab('Flux (m/s)') +
     ggplot2::geom_vline(xintercept = TD, lty = 2, col = 'blue')
 
-  # plot(time(q1)[-c(1:ind)], q.exp[-c(1:ind)],
-  #      ylim = c(0.95*qS.column, 1.15*qS.column),
-  #      xlim = c(time(q1)[ind], time(q1)[ind + 150]),
-  #      col = 'red', type = 'l', xlab = 'Time (s)', ylab = 'Flux (m/s)')
-  # lines(time(q1)[-c(1:ind)], qm, lwd = 1.5)
-  # abline(v = c(tD.optim, ind.upper.all[1]), lty = 2)
-
   print(g)
-  list(q_ms = q_ms, ind = ind, TD = TD, TW = TW, TE = TE, viscous_flow_tail = viscous_flow_tail)
+  list(q_ms = q_ms, ind = ind, qS = qS, TD = TD, TW = TW, TE = TE, viscous_flow_tail = viscous_flow_tail)
+}
+
+
+calculate_vf_parameters <- function(eta = 1E-6, g = 9.81, TD, TE, Z, qS) {
+  celerity <- Z / (TD - TE)
+  film_thickness <-(celerity * eta/g)^0.5
+  contact_area = 3 * qS * 1/film_thickness^3 * eta/g
+  data.frame('c' = celerity, 'F' = film_thickness * 1E6, 'L' = contact_area)
 }
