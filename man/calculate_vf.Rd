@@ -37,7 +37,7 @@ where \mjeqn{q(Z,t)}{} is the drainage flow in a depth \mjeqn{Z}{} and time \mje
 }
 \examples{
 data(drainage)
-flow <- calculate_vf(drainage_data = drainage, qS = 10.1, TE = 64404,
+flow <- calculate_vf(drainage_data = drainage, qS = 10.1, TE = 64410,
 TD = 64404 +100, TW = 1000)
 }
 \references{

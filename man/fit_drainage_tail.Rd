@@ -51,8 +51,7 @@ calculates the arrival time of the drainage front \mjeqn{T_D}{TD}.
 }
 \examples{
 data(drainage)
-my_TD <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404),
-TE = 64404, TD_interval = c(0.9 * TE, 1.1 * TE),
-qS = NULL, fit_qS = TRUE, delta_t = 30,
-my_weights = NULL)
+my_TD <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64410 , 64410),
+TE = 64410, TD_interval = c(0.9 * 64410, 1.1 * 64410), qS = NULL, fit_qS = TRUE,
+delta_t = 30, my_weights = NULL)
 }

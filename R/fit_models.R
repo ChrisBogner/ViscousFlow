@@ -85,7 +85,7 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
 #'
 #' @examples
 #' data(drainage)
-#' fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404))
+#' fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64410 , 64410))
 fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
   ind1 <- max(which(drainage_data[,1] <= stationary_time[2]))
   ind2 <- min(which(drainage_data[,1] >= stationary_time[1]))
@@ -126,7 +126,7 @@ fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
 #'
 #' @examples
 #' data(drainage)
-#' flow <- calculate_vf(drainage_data = drainage, qS = 10.1, TE = 64404,
+#' flow <- calculate_vf(drainage_data = drainage, qS = 10.1, TE = 64410,
 #' TD = 64404 +100, TW = 1000)
 calculate_vf <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
   flow_time <- dplyr::pull(drainage_data, var = 1)
@@ -219,10 +219,9 @@ calculate_TW = function(TD, TE, TB = 0){
 #'
 #' @examples
 #' data(drainage)
-#' my_TD <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404),
-#' TE = 64404, TD_interval = c(0.9 * TE, 1.1 * TE),
-#' qS = NULL, fit_qS = TRUE, delta_t = 30,
-#' my_weights = NULL)
+#' my_TD <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64410 , 64410),
+#' TE = 64410, TD_interval = c(0.9 * 64410, 1.1 * 64410), qS = NULL, fit_qS = TRUE,
+#' delta_t = 30, my_weights = NULL)
 fit_drainage_tail <- function(drainage_data, stationary_time, D,
                               TE, TD_interval = NULL,
                               qS = NULL, fit_qS = TRUE, delta_t = 30,
@@ -275,6 +274,27 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D,
 }
 
 
+#' Calculate viscous flow parameters
+#'
+#' Calculates the parameters of the viscous flow, namely celerity, film thickness and contact area.
+#'
+#' @param eta numeric. Cinetamitc viscosity, default is 1E-6.
+#' @param g numeric. Gravity constan, default is 9.81 m s\mjeqn{^-2}{}.
+#' @param TD numeric. Arrival time of the drainage front.
+#' @param TE numeric. End of irrigation.
+#' @param Z numeric. Length of the soil column in m.
+#' @param qS numeric. The flux density at the top of the soil column (or the fitted stationary flow rate) in m s\mjeqn{^-1}{}.
+#'
+#' @return data.frame
+#' c: celerity
+#' F: film_thickness in \mjeqn{\mu}{}m
+#' L: contact_area in m \mjeqn{^-1}{}
+#'
+#' @export
+#'
+#' @examples
+#' vf_params <- calculate_vf_parameters(TD = 64830, TE = 64410,
+#' Z = 0.3, qS = 2.79E-06)
 calculate_vf_parameters <- function(eta = 1E-6, g = 9.81, TD, TE, Z, qS) {
   celerity <- Z / (TD - TE)
   film_thickness <-(celerity * eta/g)^0.5
