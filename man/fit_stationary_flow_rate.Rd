@@ -19,5 +19,5 @@ Calculate stationary flow rate in the drainage
 }
 \examples{
 data(drainage)
-fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64404 , 64404))
+fit_stationary_flow_rate(drainage_data = drainage, stationary_time = c(0.9 * 64410 , 64410))
 }
