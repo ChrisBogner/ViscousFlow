@@ -39,7 +39,7 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 
 This is a basic example which shows you how to fit the viscous flow equation to the decreasing limb of a drainage curve and to calculate the viscous flow parameters $F$ and $L$. 
 
-The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019. There, it is called column C1 and was packed from loose soil material collected form a forest soil in southeast Germany (50°08'32.8'' N 11°51'52.9'' E). Prior to the irrigation experiment, the soil column was saturated from below and then drained to field capacity. It was irrigated at 10 mm h^-1^ during 64410 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at the bottom of the soil column to prevent saturation. The data set `drainage' contains the drainage from this soil column C1. The data was smoothed (see the original open access publication @Bogner2019 for details).
+The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019. There, it is called column C1 and was packed from loose soil material (diameter = 15 cm and height = 30 cm) collected form a forest soil in southeast Germany (50°08'32.8'' N 11°51'52.9'' E). Prior to the irrigation experiment, the soil column was saturated from below and then drained to field capacity. It was irrigated at 10 mm h^-1^ during 64410 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at the bottom of the soil column to prevent saturation. The data set `drainage' contains the drainage from this soil column C1. The data was smoothed (see the original open access publication @Bogner2019 for details).
 
 The irrigation water contained Bromide that was measured in the drainage water with an ion-sensitive electrode. The data set `tracer' contains the normalized Bromide concentration (i.e. concentration in the drainage divided by the concentration in the irrigation water).
 
@@ -92,7 +92,33 @@ breakthrough
 
 ```
 
-Fit the viscous flow equation $$q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{for} \quad T_{D} \leq t \leq \infty$$ to the drainage data.
+
+Fit the viscous flow equation to the drainage data:
+
+$$q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{for} \quad T_{D} \leq t \leq \infty$$
+
+During the steady state, the irrigation intensity and the drainage flow should be equal. From experience, calculating the flux density $q_S$ from the plateau of the drainage flow leads to a better fit. Therefore, we set the parameter fit_qS = TRUE.
+```{r}
+fit_result <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.9 * 64410 , 64410), TE = 64410, D = 0.15,
+                              qS = NULL, fit_qS = TRUE, delta_t = 30,
+                              my_weights = 1)
+
+```
+
+The arrival times of the wetting ($T_W$) and drainage ($T_D$) fronts equal:
+```{r}
+fit_result$TW
+fit_result$TD
+```
+
+Calculate the parameters of the viscous flow, namely the celerity $c$, the film width $F$ (in $\mu$m) and the contact area $L$ (in m^-1^).
+```{r}
+params <- calculate_vf_parameters(TD = fit_result$TD, TE = fit_result$TE,
+                                  Z = 0.3, qS = fit_result$qS)
+params
+
+```
+
 
 ## Refereneces
 <div id="refs"></div>
