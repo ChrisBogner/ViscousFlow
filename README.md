@@ -42,7 +42,7 @@ the bottom of the soil column to prevent saturation. The data set
 \`drainage’ contains the drainage from this soil column C1.
 
 The irrigation water contained Bromide that was measured in the drainage
-water with an ion-sensitive electrode. The data set \`tracer’ contains
+water with an ion-sensitive electrode. The data set `tracer` contains
 the normalized Bromide concentration (i.e. concentration in the drainage
 divided by the concentration in the irrigation water).
 
@@ -64,7 +64,7 @@ library(tidyverse)
 #> x dplyr::lag()    masks stats::lag()
 library(gridExtra)
 #> 
-#> Attaching package: 'gridExtra'
+#> Attache Paket: 'gridExtra'
 #> The following object is masked from 'package:dplyr':
 #> 
 #>     combine

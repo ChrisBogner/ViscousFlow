@@ -41,7 +41,7 @@ This is a basic example which shows you how to fit the viscous flow equation to 
 
 The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019. There, it is called column C1 and was packed from loose soil material (diameter = 15 cm and height = 30 cm) collected form a forest soil in southeast Germany (50°08'32.8'' N 11°51'52.9'' E). Prior to the irrigation experiment, the soil column was saturated from below and then drained to field capacity. It was irrigated at 10 mm h^-1^ during 64410 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at the bottom of the soil column to prevent saturation. The data set `drainage' contains the drainage from this soil column C1.
 
-The irrigation water contained Bromide that was measured in the drainage water with an ion-sensitive electrode. The data set `tracer' contains the normalized Bromide concentration (i.e. concentration in the drainage divided by the concentration in the irrigation water).
+The irrigation water contained Bromide that was measured in the drainage water with an ion-sensitive electrode. The data set `tracer` contains the normalized Bromide concentration (i.e. concentration in the drainage divided by the concentration in the irrigation water).
 
 Both data sets were smoothed by LOESS (see the original open access publication @Bogner2019 for details).
 
