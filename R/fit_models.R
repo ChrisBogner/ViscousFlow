@@ -102,9 +102,9 @@ fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
 #' \loadmathjax
 #' \mjdeqn{q(Z,t) = 0 \quad \mathrm{if} \quad T_{B} \leq t \leq T_{W}}{}
 #'
-#' \mjdeqn{q(Z,t) = q_{s} \quad \mathrm{if} \quad T_{W} \leq t \leq T_{D}}{}
+#' \mjdeqn{q(Z,t) = q_{S} \quad \mathrm{if} \quad T_{W} \leq t \leq T_{D}}{}
 #'
-#' \mjdeqn{q(Z,t) = q_{s} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty}{}
+#' \mjdeqn{q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty}{}
 #'
 #' where \mjeqn{q(Z,t)}{} is the drainage flow in a depth \mjeqn{Z}{} and time \mjeqn{t}{}, \mjeqn{q_{s}}{} is the flux density applied at the top of the soil column
 #' (i.e. irrigation intensity), \mjeqn{T_{B}, T_{E}, T_{W}, T_{D}}{} are the beginning and the end of irrigation, and the arrival times of the wetting and drainage fronts, respectively.

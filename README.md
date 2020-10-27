@@ -61,7 +61,7 @@ library(tidyverse)
 #> x dplyr::lag()    masks stats::lag()
 library(gridExtra)
 #> 
-#> Attache Paket: 'gridExtra'
+#> Attaching package: 'gridExtra'
 #> The following object is masked from 'package:dplyr':
 #> 
 #>     combine
@@ -70,8 +70,8 @@ data(drainage)
 data(tracer)
 ```
 
-Define T\~B and T\~E, the start and end times of the irrigation
-experiment.
+Define T<sub>B</sub> and T<sub>E</sub>, the start and end times of the
+irrigation experiment.
 
 ``` r
 TB <- 0
@@ -105,17 +105,24 @@ grid.arrange(g1, g2, ncol = 1)
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 Calculate the breakthrough time of the tracer. The variable
-`time_interval` reduces the searched time. The breakthroug time is
+`time_interval` reduces the searched time. The breakthrough time is
 defined as the largest curvature in `time_interval`.
 
 ``` r
-find_tracer_breakthrough(tracer_data = tracer, time_interval = c(30000, 40000), do_plot = T)
+breakthrough <- find_tracer_breakthrough(tracer_data = tracer, time_interval = c(30000, 40000), do_plot = T)
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
-    #>  time 
-    #> 37169
+``` r
+breakthrough
+#>  time 
+#> 37169
+```
+
+Fit the viscous flow equation
+\[q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty\]
+to the drainage data for \(t \geq T_{E}\).
 
 ## Refereneces
 
