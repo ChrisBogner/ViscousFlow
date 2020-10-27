@@ -27,7 +27,8 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 
 This is a basic example which shows you how to fit the viscous flow
 equation to the decreasing limb of a drainage curve and to calculate the
-viscous flow parameters \(F\) and \(L\).
+viscous flow parameters ![F](https://latex.codecogs.com/png.latex?F "F")
+and ![L](https://latex.codecogs.com/png.latex?L "L").
 
 The package contains two data sets, namely `tracer` and `drainage`. Both
 originate from the publication by Bogner and Germann (2019). There, it
@@ -120,9 +121,12 @@ breakthrough
 #> 37169
 ```
 
-Fit the viscous flow equation
-\[q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty\]
-to the drainage data for \(t \geq T_{E}\).
+Fit the viscous flow equation   
+![q(Z,t) = q\_{S} \\cdot \\left( \\frac{T\_{D} - T\_{E}}{t - T\_{E}}
+\\right) ^\\frac{3}{2} \\quad \\mathrm{for} \\quad T\_{D} \\leq t \\leq
+\\infty](https://latex.codecogs.com/png.latex?q%28Z%2Ct%29%20%3D%20q_%7BS%7D%20%5Ccdot%20%5Cleft%28%20%5Cfrac%7BT_%7BD%7D%20-%20T_%7BE%7D%7D%7Bt%20-%20T_%7BE%7D%7D%20%5Cright%29%20%5E%5Cfrac%7B3%7D%7B2%7D%20%5Cquad%20%5Cmathrm%7Bfor%7D%20%5Cquad%20T_%7BD%7D%20%5Cleq%20t%20%5Cleq%20%5Cinfty
+"q(Z,t) = q_{S} \\cdot \\left( \\frac{T_{D} - T_{E}}{t - T_{E}} \\right) ^\\frac{3}{2} \\quad \\mathrm{for} \\quad T_{D} \\leq t \\leq \\infty")  
+to the drainage data.
 
 ## Refereneces
 

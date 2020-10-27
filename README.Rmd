@@ -4,7 +4,7 @@ author: "Christina Bogner"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
 output: 
     github_document:
-      #pandoc_args: --webtex=https://ibm.codecogs.com/png.latex?
+      pandoc_args: --webtex
 always_allow_html: yes
 bibliography: [inst/REFERENCES.bib]
 ---
@@ -92,7 +92,7 @@ breakthrough
 
 ```
 
-Fit the viscous flow equation $$q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{if} \quad T_{D} \leq t \leq \infty$$ to the drainage data for $t \geq T_{E}$.
+Fit the viscous flow equation $$q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{for} \quad T_{D} \leq t \leq \infty$$ to the drainage data.
 
 ## Refereneces
 <div id="refs"></div>
