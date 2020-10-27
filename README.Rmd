@@ -2,7 +2,10 @@
 title: "ViscousFlow"
 author: "Christina Bogner"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
-output: github_document
+output: 
+    github_document:
+      #pandoc_args: --webtex=https://ibm.codecogs.com/png.latex?
+#always_allow_html: yes
 bibliography: [inst/REFERENCES.bib]
 ---
 
@@ -34,7 +37,7 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 ```
 ## Example
 
-The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019 (there called column C1, irrigation intensity 10 mm h$^{-1}$.)
+The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019 (there called column C1, irrigation intensity 10 mm h$$x^{-1}$$).
 
 This is a basic example which shows you how to solve a common problem: TODO
 

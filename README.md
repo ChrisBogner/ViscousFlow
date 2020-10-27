@@ -27,7 +27,7 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 
 The package contains two data sets, namely `tracer` and `drainage`. Both
 originate from the publication by Bogner and Germann (2019) (there
-called column C1, irrigation intensity 10 mm h\(^{-1}\).)
+called column C1, irrigation intensity 10 mm h\[x^{-1}\]).
 
 This is a basic example which shows you how to solve a common problem:
 TODO
