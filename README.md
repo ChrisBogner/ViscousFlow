@@ -27,16 +27,16 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 
 The package contains two data sets, namely `tracer` and `drainage`. Both
 originate from the publication by Bogner and Germann (2019) (there
-called column C1, irrigation intensity 10 mm h  
-![x^{-1}](https://ibm.codecogs.com/png.latex?x%5E%7B-1%7D "x^{-1}")  
-).
+called column C1, irrigation intensity 10 mm h<sup>-1</sup>).
 
-This is a basic example which shows you how to solve a common problem:
-TODO
+This is a basic example which shows you how to solve fit the viscous
+flow equation to the decreasing limb of a drainage curve and to
+calculate the viscous flow parameters \(F\) and \(L\).
 
 ``` r
 library(ViscousFlow)
-## basic example code
+
+data(drainage)
 ```
 
 ## Refereneces
