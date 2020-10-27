@@ -39,14 +39,15 @@ experiment, the soil column was saturated from below and then drained to
 field capacity. It was irrigated at 10 mm h<sup>-1</sup> during 64410
 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at
 the bottom of the soil column to prevent saturation. The data set
-\`drainage’ contains the drainage from this soil column C1. The data was
-smoothed (see the original open access publication Bogner and Germann
-(2019) for details).
+\`drainage’ contains the drainage from this soil column C1.
 
 The irrigation water contained Bromide that was measured in the drainage
 water with an ion-sensitive electrode. The data set \`tracer’ contains
 the normalized Bromide concentration (i.e. concentration in the drainage
 divided by the concentration in the irrigation water).
+
+Both data sets were smoothed by LOESS (see the original open access
+publication Bogner and Germann (2019) for details).
 
 Load libraries and data.
 
