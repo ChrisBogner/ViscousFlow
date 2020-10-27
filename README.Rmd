@@ -4,8 +4,8 @@ author: "Christina Bogner"
 date: "`r format(Sys.time(), '%Y-%m-%d')`"
 output: 
     github_document:
-      #pandoc_args: --webtex=https://ibm.codecogs.com/png.latex?
-#always_allow_html: yes
+      pandoc_args: --webtex=https://ibm.codecogs.com/png.latex?
+always_allow_html: yes
 bibliography: [inst/REFERENCES.bib]
 ---
 
