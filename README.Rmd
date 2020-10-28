@@ -87,7 +87,7 @@ grid.arrange(g1, g2, ncol = 1)
 ```
 
 
-Calculate the breakthrough time of the tracer. The variable `time_interval` reduces the searched time. The breakthrough time is defined as the largest curvature in `time_interval`.
+Calculate the breakthrough time of the tracer. The breakthrough time is defined as the largest curvature in `time_interval`.
 ```{r}
 breakthrough <- find_tracer_breakthrough(tracer_data = tracer, time_interval = c(30000, 40000), do_plot = T)
 breakthrough

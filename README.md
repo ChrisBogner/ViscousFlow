@@ -1,7 +1,7 @@
 ViscousFlow
 ================
 Christina Bogner
-2020-10-27
+2020-10-28
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -107,8 +107,7 @@ grid.arrange(g1, g2, ncol = 1)
 
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
-Calculate the breakthrough time of the tracer. The variable
-`time_interval` reduces the searched time. The breakthrough time is
+Calculate the breakthrough time of the tracer. The breakthrough time is
 defined as the largest curvature in `time_interval`.
 
 ``` r
