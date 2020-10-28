@@ -39,7 +39,7 @@ experiment, the soil column was saturated from below and then drained to
 field capacity. It was irrigated at 10 mm h<sup>-1</sup> during 64410
 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at
 the bottom of the soil column to prevent saturation. The data set
-\`drainage’ contains the drainage from this soil column C1.
+`drainage` contains the drainage from this soil column C1.
 
 The irrigation water contained Bromide that was measured in the drainage
 water with an ion-sensitive electrode. The data set `tracer` contains
@@ -64,7 +64,7 @@ library(tidyverse)
 #> x dplyr::lag()    masks stats::lag()
 library(gridExtra)
 #> 
-#> Attache Paket: 'gridExtra'
+#> Attaching package: 'gridExtra'
 #> The following object is masked from 'package:dplyr':
 #> 
 #>     combine

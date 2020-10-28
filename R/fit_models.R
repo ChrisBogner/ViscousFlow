@@ -262,9 +262,9 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D,
   # Plot the results
   flow <- data.frame('flow_time' = flow_time[-c(1:ind)], 'flow_experiment' = q_ms[-c(1:ind)],
                  'viscous_flow_tail' = viscous_flow_tail)
-  g <- ggplot2::ggplot(data = flow, ggplot2::aes(x = flow_time, y = flow_experiment)) +
+  g <- ggplot2::ggplot(data = flow, ggplot2::aes_string(x = 'flow_time', y = 'flow_experiment')) +
     ggplot2::geom_line() +
-    ggplot2::geom_line(ggplot2::aes(y = viscous_flow_tail), colour = 'orange') +
+    ggplot2::geom_line(ggplot2::aes_string(y = 'viscous_flow_tail'), colour = 'orange') +
     ggplot2::xlab('Time') +
     ggplot2::ylab('Flux (m/s)') +
     ggplot2::geom_vline(xintercept = TD, lty = 2, col = 'blue')
