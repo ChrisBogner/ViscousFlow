@@ -1,7 +1,7 @@
 ViscousFlow
 ================
 Christina Bogner
-2020-10-28
+2020-11-06
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -86,7 +86,6 @@ Plot the data.
 ``` r
 g_all <- list(geom_line(),
   xlab('Time since start of irrigataion(sec)'),
-  ylab(expression(paste('Drainage (mm ', h^{-1}, ')'))),
   geom_vline(aes(xintercept = TE, col = 'TE'), lty = 2),
   scale_colour_manual(name = ' ', values = ('end of irrigation' = 'blue'),
                       labels = 'end of irrigation'),
@@ -96,10 +95,12 @@ g_all <- list(geom_line(),
 
 g1 <- ggplot(data = drainage, aes(x = time_sec, y = q_mmh)) + 
   g_all +
+  ylab(expression(paste('Drainage  (mm ', h^{-1}, ')'))) +
   ggtitle('Drainage column C1')
 
 g2 <- ggplot(data = tracer, aes(x = time, y = value)) + 
   g_all +
+    ylab(expression(c/c[0]))  +
   ggtitle('Tracer breakthrough column C1')
 
 grid.arrange(g1, g2, ncol = 1)

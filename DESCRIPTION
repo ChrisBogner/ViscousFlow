@@ -24,7 +24,10 @@ Imports:
     dplyr,
     mathjaxr,
     Rdpack,
-    stats
+    stats,
+    tibble,
+    stringr,
+    lubridate
 Depends: 
     R (>= 2.10)
 Suggests: 

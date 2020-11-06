@@ -7,6 +7,8 @@
 find_tracer_breakthrough(
   tracer_data,
   time_interval,
+  smooth = TRUE,
+  loess_span = 0.2,
   xlab_tag = "Time (sec)",
   ylab_tag = expression(c/c[0]),
   do_plot = TRUE
@@ -17,6 +19,10 @@ find_tracer_breakthrough(
 
 \item{time_interval}{numeric vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.}
 
+\item{smooth}{logical. Should the tracer data be smoothed by loess first. Default is true.}
+
+\item{loess_span}{numeric. The smoothing parameter for the loess smoother. Default is 0.2.}
+
 \item{xlab_tag}{string or expression for the x label. Default is Time (sec).}
 
 \item{ylab_tag}{string or expression for the y label. Default is c/c0.}
@@ -24,7 +30,9 @@ find_tracer_breakthrough(
 \item{do_plot}{logical. Should a plot be produced. Default is TRUE.}
 }
 \value{
-numeric. The estimated time of the tracer breakthrough.
+list.
+breakthrough_time The estimated time of the tracer breakthrough.
+tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), calculated curvature and its first derivative
 }
 \description{
 The breakthrough time of a tracer in the drainage of a soil column is calculated as the maximum of curvature of its concentration in a suitable time interval.

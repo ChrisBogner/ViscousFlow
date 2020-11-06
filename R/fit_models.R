@@ -5,32 +5,50 @@
 #'
 #' @param tracer_data tibble or data.frame. Tracer breakthrough data. The first column must be time, the second the tracer concentration.
 #' @param time_interval numeric vector of length 2. The time interval to search for the breakthrough, typically early in the experiment.
+#' @param smooth logical. Should the tracer data be smoothed by loess first. Default is true.
+#' @param loess_span numeric. The smoothing parameter for the loess smoother. Default is 0.2.
 #' @param xlab_tag string or expression for the x label. Default is Time (sec).
 #' @param ylab_tag string or expression for the y label. Default is c/c0.
 #' @param do_plot logical. Should a plot be produced. Default is TRUE.
 #'
-#' @return numeric. The estimated time of the tracer breakthrough.
+#' @return list.
+#' breakthrough_time The estimated time of the tracer breakthrough.
+#' tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), calculated curvature and its first derivative
 #' @export
 #'
 #' @examples
 #' data(tracer)
 #' find_tracer_breakthrough(tracer_data = tracer, time_interval = c(30000, 40000))
-find_tracer_breakthrough <- function(tracer_data, time_interval,
-                                     xlab_tag = 'Time (sec)', ylab_tag = expression(c/c[0]),
+find_tracer_breakthrough <- function(tracer_data, time_interval, smooth = TRUE,
+                                     loess_span = 0.2,
+                                     xlab_tag = 'Time (sec)',
+                                     ylab_tag = expression(c/c[0]),
                                      do_plot = TRUE) {
 
-  d1 <- sfsmisc::D1ss(unlist(tracer_data[,1]), unlist(tracer_data[,2]))
-  d2 <- sfsmisc::D2ss(unlist(tracer_data[,1]), unlist(tracer_data[,2]))$y
+  if(smooth) {
+    tracer_smoothed <-stats::loess(unlist(tracer_data[,2]) ~ unlist(tracer_data[,1]),
+                                   span = loess_span)
+
+    res <- stats::predict(tracer_smoothed, unlist(tracer_data[,1]))
+    tracer_data <- tracer_data %>%
+      dplyr::mutate(smoothed_tracer = res)
+
+    d1 <- sfsmisc::D1ss(unlist(tracer_data[,1]), unlist(tracer_data$smoothed_tracer))
+    d2 <- sfsmisc::D2ss(unlist(tracer_data[,1]), unlist(tracer_data$smoothed_tracer))$y
+  } else {
+    d1 <- sfsmisc::D1ss(unlist(tracer_data[,1]), unlist(tracer_data[,2]))
+    d2 <- sfsmisc::D2ss(unlist(tracer_data[,1]), unlist(tracer_data[,2]))$y
+  }
 
   # formula for curvature from Wikipedia (https://en.wikipedia.org/wiki/Curvature)
   curvature <- abs(d2)/((1+d1^2)^(3/2))
   # Change of curvature
   d1_curve <- sfsmisc::D1ss(unlist(tracer_data[,1]), curvature)
-  ind_search <- which(tracer_data[,1] > time_interval[1] & tracer_data[,1] < time_interval[2])
+  ind_search <- which(unlist(tracer_data[,1]) > time_interval[1] & unlist(tracer_data[,1]) < time_interval[2])
   # Pick the max of curvature as tracer breakthrough
   breakthrough_time <- unlist(tracer_data[(which.max(curvature[ind_search]) + ind_search[1] - 1), 1])
 
-  tracer_data %>%
+  tracer_data <- tracer_data %>%
     dplyr::mutate(curvature, d1_curve)
 
   if(do_plot) {
@@ -38,18 +56,32 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
       ggplot2::geom_line(), ggplot2::xlab(xlab_tag)
     )
 
+  if(smooth) {
     g1 <- ggplot2::ggplot(tracer_data, ggplot2::aes_string(x = colnames(tracer_data)[1],
-                                                   y = colnames(tracer_data)[2])) +
+                                                           y = 'smoothed_tracer')) +
+      ggplot2::ylab(ylab_tag) +
+      g_all +
+      ggplot2::geom_point(ggplot2::aes_string(y = colnames(tracer_data)[2]), pch = 1, cex = 0.7) +
+      ggplot2::geom_vline(ggplot2::aes(xintercept = breakthrough_time,
+                                       colour = 'breakthrough'), lty = 2) +
+      ggplot2::scale_colour_manual(name = ' ', values = (time = 'blue')) +
+      ggplot2::theme(legend.position=c(0.2, 0.9),
+                     legend.background = ggplot2::element_rect(fill="transparent", colour=NA),
+                     legend.key = ggplot2::element_rect(fill = "white")) +
+      ggplot2::ggtitle('Tracer breakthrough')
+  } else {
+    g1 <- ggplot2::ggplot(tracer_data, ggplot2::aes_string(x = colnames(tracer_data)[1],
+                                                           y = colnames(tracer_data)[2])) +
       ggplot2::ylab(ylab_tag) +
       g_all +
       ggplot2::geom_vline(ggplot2::aes(xintercept = breakthrough_time,
-                              colour = 'breakthrough'), lty = 2) +
+                                       colour = 'breakthrough'), lty = 2) +
       ggplot2::scale_colour_manual(name = ' ', values = (time = 'blue')) +
       ggplot2::theme(legend.position=c(0.2, 0.9),
-            legend.background = ggplot2::element_rect(fill="transparent", colour=NA),
-            legend.key = ggplot2::element_rect(fill = "white")) +
+                     legend.background = ggplot2::element_rect(fill="transparent", colour=NA),
+                     legend.key = ggplot2::element_rect(fill = "white")) +
       ggplot2::ggtitle('Tracer breakthrough')
-
+  }
 
     g2 <- ggplot2::ggplot(tracer_data, ggplot2::aes_string(x = colnames(tracer_data)[1],
                                                            y = 'curvature')) +
@@ -70,8 +102,8 @@ find_tracer_breakthrough <- function(tracer_data, time_interval,
 
     g <- gridExtra::grid.arrange(g1, g2, g3, ncol = 1)
 
-    breakthrough_time
-  } else breakthrough_time
+    list(breakthrough_time = as.numeric(breakthrough_time), tracer_data = tracer_data)
+  } else list(breakthrough_time = as.numeric(breakthrough_time), tracer_data = tracer_data)
 }
 
 
@@ -139,6 +171,20 @@ calculate_vf <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
         TRUE ~ qS * ((TD - TE)/(flow_time - TE))^exponent
       )
     )
+  flow
+}
+
+calculate_linear_reservoir <- function(drainage_data, q0, t0, lambda) {
+  flow_time <- dplyr::pull(drainage_data, var = 1)
+
+  flow <- drainage_data %>%
+    dplyr::mutate(
+      linear_reservoir = dplyr::case_when(
+        flow_time < t0 ~ 0,
+        TRUE ~ q0 * exp(-lambda * (flow_time - t0))
+      )
+    )
+  flow$linear_reservoir[which(flow_time < t0)] = NA
   flow
 }
 
@@ -250,7 +296,7 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D,
     weight_1 = max(which(flow_time[-c(1:ind)] <= TE))
     my_weights = c(rep(0.5, weight_1), rep(1.5, (length(flow_time[-c(1:ind)]) - weight_1)))
   }
-  TD_optim = stats::optimize(fit_TD, interval = TD_interval, weights = my_weights, tol = 0.0001)$minimum
+  TD_optim <- stats::optimize(fit_TD, interval = TD_interval, weights = my_weights, tol = 0.0001)$minimum
 
   viscous_flow_tail <- calc_vf_internal(TD = TD_optim, qS = qS, TE = TE, flow_time[-c(1:ind)])
 
