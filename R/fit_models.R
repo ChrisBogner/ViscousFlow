@@ -273,7 +273,7 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D,
                               qS = NULL, fit_qS = TRUE, delta_t = 30,
                               my_weights = 1) {
 
-  TD_interval = c(0.9 * TE, 1.1 * TE)
+  if(is.null(TD_interval)) TD_interval = c(0.9 * TE, 1.1 * TE)
   # transform q1 from mm/h to m/s
   q_ms <- drainage_data %>%
     dplyr::pull(var = 2)/(1000*3600)
