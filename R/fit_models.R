@@ -13,6 +13,7 @@
 #'
 #' @return list.
 #' breakthrough_time The estimated time of the tracer breakthrough.
+#'
 #' tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), first derivative of the tracer data (slope),
 #' calculated curvature and its first derivative
 #' @export
