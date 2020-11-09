@@ -13,7 +13,8 @@
 #'
 #' @return list.
 #' breakthrough_time The estimated time of the tracer breakthrough.
-#' tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), calculated curvature and its first derivative
+#' tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), first derivative of the tracer data (slope),
+#' calculated curvature and its first derivative
 #' @export
 #'
 #' @examples
@@ -49,7 +50,7 @@ find_tracer_breakthrough <- function(tracer_data, time_interval, smooth = TRUE,
   breakthrough_time <- unlist(tracer_data[(which.max(curvature[ind_search]) + ind_search[1] - 1), 1])
 
   tracer_data <- tracer_data %>%
-    dplyr::mutate(curvature, d1_curve)
+    dplyr::mutate(tracer_first_deriv = d1, curvature, curvature_first_deriv = d1_curve)
 
   if(do_plot) {
     g_all <- list(
