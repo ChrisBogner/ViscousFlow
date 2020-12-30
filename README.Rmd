@@ -38,9 +38,7 @@ devtools::install_github("ChrisBogner/ViscousFlow")
 
 ## Example
 
-This is a basic example which shows you how to fit the viscous flow equation to the decreasing limb of a drainage curve and to calculate the viscous flow parameters $F$ and $L$. 
-
-Test
+This is a basic example which shows you how to fit the viscous flow equation to the decreasing limb of a drainage curve and to calculate the viscous flow parameters $F$ and $L$.
 
 The package contains two data sets, namely `tracer` and `drainage`. Both originate from the publication by @Bogner2019. There, it is called column C1 and was packed from loose soil material (diameter = 15 cm and height = 30 cm) collected form a forest soil in southeast Germany (50°08'32.8'' N 11°51'52.9'' E). Prior to the irrigation experiment, the soil column was saturated from below and then drained to field capacity. It was irrigated at 10 mm h^-1^ during 64410 sec (17.9 h). During the experiment, a suction of -10 hPa was applied at the bottom of the soil column to prevent saturation. The data set `drainage` contains the drainage from this soil column C1.
 
