@@ -15,7 +15,7 @@ fit_stationary_flow_rate(drainage_data, stationary_time)
 numeric. The stationary flow rate
 }
 \description{
-Calculate stationary flow rate in the drainage
+Calculates the median of the flow rate in a given time interval, usually the stationary flow interval.
 }
 \examples{
 data(drainage)
