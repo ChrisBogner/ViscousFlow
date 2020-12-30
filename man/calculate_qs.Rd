@@ -4,7 +4,7 @@
 \alias{calculate_qs}
 \title{Calculate the flux density at the top of the soil column}
 \usage{
-calculate_qs(pump_rate, D = 0.08)
+calculate_qs(pump_rate, D)
 }
 \arguments{
 \item{pump_rate}{numeric. The pump rate in g/min}

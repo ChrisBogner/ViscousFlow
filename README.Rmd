@@ -35,6 +35,7 @@ You can install ViscousFlow from GitHub with `devoolts' like so:
 # install.packages("devtools")
 devtools::install_github("ChrisBogner/ViscousFlow")
 ```
+
 ## Example
 
 This is a basic example which shows you how to fit the viscous flow equation to the decreasing limb of a drainage curve and to calculate the viscous flow parameters $F$ and $L$. 

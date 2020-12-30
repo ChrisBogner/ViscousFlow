@@ -32,7 +32,9 @@ find_tracer_breakthrough(
 \value{
 list.
 breakthrough_time The estimated time of the tracer breakthrough.
-tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), calculated curvature and its first derivative
+
+tracer_data The original tracer data augmented by the smoothed data (is smooth = TRUE), first derivative of the tracer data (slope),
+calculated curvature and its first derivative
 }
 \description{
 The breakthrough time of a tracer in the drainage of a soil column is calculated as the maximum of curvature of its concentration in a suitable time interval.

@@ -109,7 +109,11 @@ find_tracer_breakthrough <- function(tracer_data, time_interval, smooth = TRUE,
 }
 
 
+########################
+
 #' Calculate stationary flow rate in the drainage
+#'
+#' Calculates the median of the flow rate in a given time interval, usually the stationary flow interval.
 #'
 #' @param drainage_data tibble or data.frame. Drainage data from a column experiment. The first column must contain the time, the second the drainage data.
 #' @param stationary_time numeric vector of length 2. The time interval where the flow is assumed to be stationary. Typically one would select the shortly before the irrigation is switched off, i.e. 0.9 * end_of_irrigation until end_or_irrigation.
@@ -126,8 +130,11 @@ fit_stationary_flow_rate <- function(drainage_data, stationary_time) {
 
   drainage_data[ind1:ind2, ] %>%
     dplyr::pull(var = 2) %>%
-    mean(na.rm = T)
+    stats::median(na.rm = T)
 }
+
+
+####################
 
 #' Calculate the theoretical drainage according to the viscous flow approach
 #'
@@ -176,19 +183,8 @@ calculate_vf <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
   flow
 }
 
-calculate_linear_reservoir <- function(drainage_data, q0, t0, lambda) {
-  flow_time <- dplyr::pull(drainage_data, var = 1)
 
-  flow <- drainage_data %>%
-    dplyr::mutate(
-      linear_reservoir = dplyr::case_when(
-        flow_time < t0 ~ 0,
-        TRUE ~ q0 * exp(-lambda * (flow_time - t0))
-      )
-    )
-  flow$linear_reservoir[which(flow_time < t0)] = NA
-  flow
-}
+###################
 
 #' Calculate the flux density at the top of the soil column
 #'
@@ -199,11 +195,13 @@ calculate_linear_reservoir <- function(drainage_data, q0, t0, lambda) {
 #'
 #' @return numeric. The flux density \mjeqn{q_S}{} in m/s
 #' @export
-calculate_qs <- function(pump_rate, D = 0.08) {
+calculate_qs <- function(pump_rate, D) {
   # pump_rate in g/min, qs in m/h
   pump_rate/((D/2 * 100)^2 * pi * 100 * 60)
 }
 
+
+############################
 
 #' Calculate viscous flow at the end of the drainage for plotting
 #'
@@ -226,6 +224,8 @@ calc_vf_internal = function(TD, qS, TE, time_vector, exponent = 3/2) {
 }
 
 
+#######################
+
 #' Calculate the arrival time of the wetting front
 #'
 #' @param TD numeric. Arrival time of the drainage front.
@@ -239,6 +239,7 @@ calculate_TW = function(TD, TE, TB = 0){
   TB + 3*(TD - TE)
 }
 
+############################
 
 #' Fit the viscous flow equation
 #'
@@ -321,6 +322,7 @@ fit_drainage_tail <- function(drainage_data, stationary_time, D,
   list(q_ms = q_ms, ind = ind, qS = qS, TD = TD, TW = TW, TE = TE, viscous_flow_tail = viscous_flow_tail)
 }
 
+############################
 
 #' Calculate viscous flow parameters
 #'
@@ -349,3 +351,31 @@ calculate_vf_parameters <- function(eta = 1E-6, g = 9.81, TD, TE, Z, qS) {
   contact_area = 3 * qS * 1/film_thickness^3 * eta/g
   data.frame('c' = celerity, 'F' = film_thickness * 1E6, 'L' = contact_area)
 }
+
+###################
+
+#' Calculate the resending limb of the linear reservoir
+#'
+#' @param drainage_data tibble. First column time, second column flow rate
+#' @param q0 numeric. Flow rate at the end of irrigation
+#' @param t0 numeric. End of irrigation
+#' @param lambda numeric. Reservoir parameter.
+#'
+#' @return tibble. First two column are original drainage_data. Third column is the drainage according to the linear reservoir model.
+#' @export
+#'
+#' @examples
+calculate_linear_reservoir <- function(drainage_data, q0, t0, lambda) {
+  flow_time <- dplyr::pull(drainage_data, var = 1)
+
+  flow <- drainage_data %>%
+    dplyr::mutate(
+      linear_reservoir = dplyr::case_when(
+        flow_time < t0 ~ 0,
+        TRUE ~ q0 * exp(-lambda * (flow_time - t0))
+      )
+    )
+  flow$linear_reservoir[which(flow_time < t0)] <- NA
+  flow
+}
+

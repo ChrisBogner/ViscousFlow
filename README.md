@@ -1,14 +1,13 @@
 ViscousFlow
 ================
 Christina Bogner
-2020-11-06
+2020-12-30
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ## Package aims
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 This package analyses laboratory irrigation experiments on soil columns.
@@ -64,7 +63,7 @@ library(tidyverse)
 #> x dplyr::lag()    masks stats::lag()
 library(gridExtra)
 #> 
-#> Attaching package: 'gridExtra'
+#> Attache Paket: 'gridExtra'
 #> The following object is masked from 'package:dplyr':
 #> 
 #>     combine
@@ -119,17 +118,29 @@ breakthrough <- find_tracer_breakthrough(tracer_data = tracer, time_interval = c
 
 ``` r
 breakthrough
-#>  time 
-#> 37169
+#> $breakthrough_time
+#> [1] 37169
+#> 
+#> $tracer_data
+#> # A tibble: 213 x 6
+#>     time     value smoothed_tracer tracer_first_der… curvature curvature_first_…
+#>    <dbl>     <dbl>           <dbl>             <dbl>     <dbl>             <dbl>
+#>  1  1560  0.00205        0.00201        -0.000000920  5.13e-11          3.74e-14
+#>  2  1920  0.00171        0.00168        -0.000000902  6.51e-11          3.46e-14
+#>  3  2280  0.00138        0.00136        -0.000000875  7.58e-11          2.11e-14
+#>  4  2640  0.00106        0.00105        -0.000000845  8.17e-11          6.11e-15
+#>  5  3000  0.000745       0.000753       -0.000000816  8.08e-11         -1.11e-15
+#>  6  3360  0.000449       0.000464       -0.000000789  7.83e-11         -2.57e-15
+#>  7  3720  0.000167       0.000186       -0.000000760  7.93e-11         -3.24e-16
+#>  8  4080 -0.000101      -0.0000825      -0.000000730  8.07e-11          9.50e-16
+#>  9  4440 -0.000359      -0.000340       -0.000000702  7.97e-11         -3.44e-15
+#> 10  4800 -0.000608      -0.000588       -0.000000674  7.72e-11         -7.70e-15
+#> # … with 203 more rows
 ```
 
 Fit the viscous flow equation to the drainage data:
 
-  
-![q(Z,t) = q\_{S} \\cdot \\left( \\frac{T\_{D} - T\_{E}}{t - T\_{E}}
-\\right) ^\\frac{3}{2} \\quad \\mathrm{for} \\quad T\_{D} \\leq t \\leq
-\\infty](https://latex.codecogs.com/png.latex?q%28Z%2Ct%29%20%3D%20q_%7BS%7D%20%5Ccdot%20%5Cleft%28%20%5Cfrac%7BT_%7BD%7D%20-%20T_%7BE%7D%7D%7Bt%20-%20T_%7BE%7D%7D%20%5Cright%29%20%5E%5Cfrac%7B3%7D%7B2%7D%20%5Cquad%20%5Cmathrm%7Bfor%7D%20%5Cquad%20T_%7BD%7D%20%5Cleq%20t%20%5Cleq%20%5Cinfty
-"q(Z,t) = q_{S} \\cdot \\left( \\frac{T_{D} - T_{E}}{t - T_{E}} \\right) ^\\frac{3}{2} \\quad \\mathrm{for} \\quad T_{D} \\leq t \\leq \\infty")  
+![q(Z,t) = q\_{S} \\cdot \\left( \\frac{T\_{D} - T\_{E}}{t - T\_{E}} \\right) ^\\frac{3}{2} \\quad \\mathrm{for} \\quad T\_{D} \\leq t \\leq \\infty](https://latex.codecogs.com/png.latex?q%28Z%2Ct%29%20%3D%20q_%7BS%7D%20%5Ccdot%20%5Cleft%28%20%5Cfrac%7BT_%7BD%7D%20-%20T_%7BE%7D%7D%7Bt%20-%20T_%7BE%7D%7D%20%5Cright%29%20%5E%5Cfrac%7B3%7D%7B2%7D%20%5Cquad%20%5Cmathrm%7Bfor%7D%20%5Cquad%20T_%7BD%7D%20%5Cleq%20t%20%5Cleq%20%5Cinfty "q(Z,t) = q_{S} \cdot \left( \frac{T_{D} - T_{E}}{t - T_{E}} \right) ^\frac{3}{2} \quad \mathrm{for} \quad T_{D} \leq t \leq \infty")
 
 During the steady state, the irrigation intensity and the drainage flow
 should be equal. From experience, calculating the flux density
@@ -164,7 +175,7 @@ fit_result$TD
 Calculate the parameters of the viscous flow, namely the celerity
 ![c](https://latex.codecogs.com/png.latex?c "c"), the film width
 ![F](https://latex.codecogs.com/png.latex?F "F") (in
-![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\\mu")m) and the
+![\\mu](https://latex.codecogs.com/png.latex?%5Cmu "\mu")m) and the
 contact area ![L](https://latex.codecogs.com/png.latex?L "L") (in
 m<sup>-1</sup>).
 
@@ -172,15 +183,15 @@ m<sup>-1</sup>).
 params <- calculate_vf_parameters(TD = fit_result$TD, TE = fit_result$TE,
                                   Z = 0.3, qS = fit_result$qS)
 params
-#>              c        F       L
-#> 1 0.0007142857 8.532995 1374.67
+#>              c        F        L
+#> 1 0.0007142857 8.532995 1376.101
 ```
 
 ## Refereneces
 
-<div id="refs">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Bogner2019">
+<div id="ref-Bogner2019" class="csl-entry">
 
 Bogner, Christina, and Peter Germann. 2019. “Viscous Flow Approach to
 ‘Pushing Out Old Water’ from Undisturbed and Repacked Soil Columns.”
@@ -189,11 +200,11 @@ Bogner, Christina, and Peter Germann. 2019. “Viscous Flow Approach to
 
 </div>
 
-<div id="ref-Germann2018">
+<div id="ref-Germann2018" class="csl-entry">
 
 Germann, Peter. 2018. *Preferential Flow Stokes Approach to Infiltration
 and Drainage*. CH: Geographica Bernensia.
-<https://doi.org/https://doi.org/10.4480/GB2018.G88>.
+https://doi.org/<https://doi.org/10.4480/GB2018.G88>.
 
 </div>
 
