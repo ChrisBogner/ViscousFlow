@@ -191,15 +191,15 @@ calculate_vf <- function(drainage_data, qS, TW, TD, TE, exponent = 3/2) {
 #' Converts the pump rate of the irrigation pump into the flux density \mjeqn{q_S}{} in m/s.
 #'
 #' @param pump_rate numeric. The pump rate in g/min
+#' @param rho_H20 numeric. Density of water, default is 0.99704 g/mL or g/cm^3
 #' @param D numeric. Diameter of the soil column.
 #'
 #' @return numeric. The flux density \mjeqn{q_S}{} in m/s
 #' @export
-calculate_qs <- function(pump_rate, D) {
+calculate_qs <- function(pump_rate, rho_H20 = 0.99704, D) {
   # pump_rate in g/min, qs in m/h
-  pump_rate/((D/2 * 100)^2 * pi * 100 * 60)
+  pump_rate * 60/(rho_H20 * 1000 * (D/2)^2 * pi * 1000 * 3600)
 }
-
 
 ############################
 

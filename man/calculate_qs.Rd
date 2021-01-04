@@ -4,10 +4,12 @@
 \alias{calculate_qs}
 \title{Calculate the flux density at the top of the soil column}
 \usage{
-calculate_qs(pump_rate, D)
+calculate_qs(pump_rate, rho_H20 = 0.99704, D)
 }
 \arguments{
 \item{pump_rate}{numeric. The pump rate in g/min}
+
+\item{rho_H20}{numeric. Density of water, default is 0.99704 g/mL or g/cm^3}
 
 \item{D}{numeric. Diameter of the soil column.}
 }

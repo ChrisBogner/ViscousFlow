@@ -68,7 +68,8 @@ extract_data <- function(data_orig, weight_unit, do_plot = T) {
   g <- ggplot2::ggplot(res, ggplot2::aes_string(x = 'time_rel_sec',
                                                 y = colnames(res)[2])) +
     ggplot2::geom_line()
-  print(g)
+
+  if(do_plot) print(g)
   res
 }
 
