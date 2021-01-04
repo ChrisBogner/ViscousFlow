@@ -41,12 +41,13 @@ plot_tracer <- function(tracer_data, time_threshold = NULL,
 #'
 #' @param data_orig the original data, the format is "hh:mm:ss.sss:\n weight unit
 #' @param weight_unit character, weight unit transmitted by the scale: g or kg
+#' @param do_plot logical. Should the extracted data be plotted. Default is TRUE.
 #'
 #' @return a tibble. First column time in sec, second column weight in unit
 #' @export
 #'
 #' @examples
-extract_data <- function(data_orig, weight_unit) {
+extract_data <- function(data_orig, weight_unit, do_plot = T) {
   time_xs <- data_orig %>%
     dplyr::slice(seq(1, dim(data_orig)[1], 2)) %>%
     dplyr::pull(var = 1) %>%

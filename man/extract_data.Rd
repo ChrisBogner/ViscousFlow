@@ -4,12 +4,14 @@
 \alias{extract_data}
 \title{Extracts data from scales}
 \usage{
-extract_data(data_orig, weight_unit)
+extract_data(data_orig, weight_unit, do_plot = T)
 }
 \arguments{
 \item{data_orig}{the original data, the format is "hh:mm:ss.sss:\n weight unit}
 
 \item{weight_unit}{character, weight unit transmitted by the scale: g or kg}
+
+\item{do_plot}{logical. Should the extracted data be plotted. Default is TRUE.}
 }
 \value{
 a tibble. First column time in sec, second column weight in unit
