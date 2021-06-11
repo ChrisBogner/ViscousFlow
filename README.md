@@ -1,7 +1,7 @@
 ViscousFlow
 ================
 Christina Bogner
-2020-12-30
+2021-06-11
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
@@ -53,18 +53,18 @@ Load libraries and data.
 ``` r
 library(ViscousFlow)
 library(tidyverse)
-#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──
-#> ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-#> ✓ tibble  3.0.4     ✓ dplyr   1.0.2
-#> ✓ tidyr   1.1.0     ✓ stringr 1.4.0
-#> ✓ readr   1.3.1     ✓ forcats 0.5.0
+#> ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+#> ✓ ggplot2 3.3.3     ✓ purrr   0.3.4
+#> ✓ tibble  3.1.2     ✓ dplyr   1.0.6
+#> ✓ tidyr   1.1.3     ✓ stringr 1.4.0
+#> ✓ readr   1.4.0     ✓ forcats 0.5.1
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> x dplyr::filter() masks stats::filter()
 #> x dplyr::lag()    masks stats::lag()
 library(gridExtra)
 #> 
 #> Attache Paket: 'gridExtra'
-#> The following object is masked from 'package:dplyr':
+#> Das folgende Objekt ist maskiert 'package:dplyr':
 #> 
 #>     combine
 
@@ -105,7 +105,7 @@ g2 <- ggplot(data = tracer, aes(x = time, y = value)) +
 grid.arrange(g1, g2, ncol = 1)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="90%" />
 
 Calculate the breakthrough time of the tracer. The breakthrough time is
 defined as the largest curvature in `time_interval`.
@@ -114,7 +114,7 @@ defined as the largest curvature in `time_interval`.
 breakthrough <- find_tracer_breakthrough(tracer_data = tracer, time_interval = c(30000, 40000), do_plot = T)
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="90%" />
 
 ``` r
 breakthrough
@@ -159,7 +159,7 @@ fit_result <- fit_drainage_tail(drainage_data = drainage, stationary_time = c(0.
 #> my_weights, : NA/Inf durch größte positive Zahl ersetzt
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="90%" />
 
 The arrival times of the wetting
 (![T\_W](https://latex.codecogs.com/png.latex?T_W "T_W")) and drainage
